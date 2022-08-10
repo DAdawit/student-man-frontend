@@ -1,32 +1,45 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
-  </div>
+  <v-app >
+    <NavBar />
+
+    <v-main>
+      <router-view />
+    </v-main>
+    <Footer_bar></Footer_bar>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+  import {
+    mapGetters
+  } from 'vuex';
+  import NavBar from './components/nav/navBar.vue'
+import Footer_bar from './components/FooterVue.vue';
+  export default {
+    name: 'App',
+    components: {
+    NavBar,
+    Footer_bar
+},
 
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+    data: () => ({
+      //
+    }),
+    computed: {
+      ...mapGetters({
+        auth: 'auth/token'
+      })
+    },
+    // created() {
+    //   if (this.auth !== null) {
+    //     this.$router.push({
+    //       path: "/dashboard"
+    //     })
+    //   }else{
+    //     this.$router.push({
+    //       path: "/"
+    //     })
+    //   }
+    // }
+  };
+</script>

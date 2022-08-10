@@ -1,23 +1,67 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import dashboard from '../views/dashboard.vue'
+import appUser from '../views/UserManage.vue'
+// import manage from '../views/manageAccounts.vue'
+import userDetail from '../components/admin/userDetail.vue'
+import users from '../components/admin/UsersManage.vue'
+import course from '../views/courseView.vue'
+import manageStudent from '../views/manageStudent.vue'
+import manageSection from '../views/sectionView.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
+
     path: '/',
     name: 'home',
     component: HomeView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+    path: '/app',
+    name: 'app',
+    component: appUser,
+    beforeEnter: (to, from, next) => {
+      let user = localStorage.getItem("token");
+      if (user !== null) {
+        next();
+      } else {
+        next("/");
+      }
+    },
+    children: [{
+        path: 'dashboard',
+        name: 'dashboard',
+        component: dashboard,
+      },
+      {
+        path: 'users',
+        name: 'users',
+        component: users,
+      },
+      {
+        path: 'manageStudent',
+        name: 'manageStudent',
+        component: manageStudent,
+      },
+      {
+        path: 'manageSection',
+        name: 'manageSection',
+        component: manageSection,
+      },
+      {
+        path: ':id/user',
+        name: 'userDetail',
+        component: userDetail
+      },
+      {
+        path: 'course',
+        name: 'course',
+        component: course
+      },
+    ]
+  },
 ]
 
 const router = new VueRouter({
