@@ -6,6 +6,7 @@ import userMan from './auth/userMan'
 import courses from './course'
 import student from './student'
 import section from './section'
+import teacher from './teacher'
 
 Vue.use(Vuex)
 
@@ -19,6 +20,6 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    auth,statics,userMan,courses,student,section
+    auth,statics,userMan,courses,student,section,teacher
   }
 })

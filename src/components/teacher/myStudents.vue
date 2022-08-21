@@ -1,13 +1,16 @@
 <template>
     <div>
-        <v-snackbar v-model="snackbar" color="teal darken-1">
-            <span class="white--text"> {{ text }}</span>
-            <template v-slot:action="{ attrs }">
-                <v-icon color="white" v-bind="attrs" @click="snackbar = false">
-                    clear
-                </v-icon>
-            </template>
-        </v-snackbar>
+        <h1>my students</h1>
+        <v-container>
+            <v-row class="pr-10">
+                <v-row>
+                    <v-col cols="12" class="d-flex justify-end">
+                        <v-btn color="primary" to="/app/addStudent">add Student <v-icon right>person_add</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-row>
+        </v-container>
         <template>
             <div class="text-center">
                 <v-dialog v-model="dialog" width="500" persistent>
@@ -59,7 +62,6 @@
                 </v-dialog>
             </div>
         </template>
-
         <v-container>
             <v-simple-table fixed-header class="elevation-1" loading-text="Loading... Please wait">
                 <template v-slot:default>
@@ -77,7 +79,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(student, index) in students.data" :key="student.id">
+                        <tr v-for="(student, index) in teacherStudents.students.data" :key="student.id">
                             <td>{{index+1}}</td>
                             <td>{{ student.fullName}}</td>
                             <td>{{ student.phoneNumber}}</td>
@@ -101,52 +103,49 @@
                     </tbody>
                 </template>
             </v-simple-table>
-        </v-container>
-        <div>
-            <div class="text-center">
-                <v-pagination v-model="current_page" :length="last_page" :total-visible="5" circle></v-pagination>
+            <div>
+                <div class="text-center">
+                    <v-pagination v-model="current_page"
+                        :length="last_page" :total-visible="5" circle></v-pagination>
+                </div>
             </div>
-        </div>
-        <alert-message-vue></alert-message-vue>
+        </v-container>
     </div>
 </template>
 
 <script>
     import axios from 'axios';
+    // import store from '../../store'
+    // import paginateVue from '../paginateCom.vue';
     import {
-        Bus
-    } from '../../main'
-    import alertMessageVue from '../alertMessage.vue';
-    import {
-        mapActions,
-        mapGetters
-    } from 'vuex'
+        mapGetters,
+        mapActions
+    } from 'vuex';
     export default {
         components: {
-            alertMessageVue
+            // paginateVue
         },
         data() {
             return {
                 dialog: false,
-                snackbar: false,
-                studentDetail: {},
-                text: '',
-                students: {},
                 current_page: 1,
-                total: 0,
-                last_page: 0,
+                total:0,
+                last_page:0,
+                studentDetail: {},
+                teacherStudents: {}
             }
         },
         computed: {
             ...mapGetters({
-                // students: 'student/students'
+                // teacherStudents: 'teacher/teacherStudents',
+                user: 'auth/user'
             })
         },
-        methods: {
-            ...mapActions({
-                getSutdents: 'student/getStudents',
 
-            }),
+        methods: {
+            // ...mapActions({
+            //     getMyStudents: 'teacher/getMyStudents'
+            // }),
 
             showStudentDetail(student) {
                 this.dialog = true;
@@ -155,27 +154,25 @@
                 }
                 console.log(student)
             },
-
-            async getSutdents() {
-                await axios.get(`/students?page=${this.current_page}`).then((res) => {
-                    this.students = res.data
-                    this.current_page = res.data.current_page
-                    this.last_page = res.data.last_page
+            async getMyStudents() {
+                await axios.get(`/teacherStudents/${this.user.id}?page=${this.current_page}`).then((res) => {
+                    this.teacherStudents = res.data;
+                    this.current_page=res.data.students.current_page
+                    this.last_page=res.data.students.last_page
+                        console.log(res.data.students);
                 })
             }
         },
-        watch: {
-            current_page(newpage) {
-                this.current_page = newpage
-                this.getSutdents()
+        watch:{
+            current_page(newpage){
+                this.current_page=newpage
+                this.getMyStudents()
             }
         },
+
         created() {
-            Bus.$on("alert", ((data) => {
-                this.text = data
-                this.snackbar = true;
-            }))
-            this.getSutdents();
+            this.getMyStudents(this.user.id)
         }
+
     }
 </script>

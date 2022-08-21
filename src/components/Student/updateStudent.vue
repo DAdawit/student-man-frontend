@@ -1,6 +1,9 @@
 <template>
     <div>
-        <v-btn color="blue-grey lighten-2" to="/app/ManageStudent" class="mt-10 ml-10">
+        <v-btn v-if="user.role == 'admin'" color="blue-grey lighten-2" to="/app/ManageStudent" class="mt-10 ml-10">
+            back <v-icon right>arrow_back </v-icon>
+        </v-btn>
+        <v-btn v-if="user.role == 'user'" color="blue-grey lighten-2" to="/app/myStudents" class="mt-10 ml-10">
             back <v-icon right>arrow_back </v-icon>
         </v-btn>
         <v-container class="mt-5">
@@ -143,7 +146,8 @@
                 sections: "section/sections",
                 courses: "courses/courses",
                 usersList: 'auth/usersList',
-                student: 'student/student'
+                student: 'student/student',
+                user: 'auth/user'
             }),
         },
         methods: {
@@ -193,7 +197,11 @@
                 this.DeleteStudent(id).then(() => {
                     this.deleteLoading = false;
                     Bus.$emit('alert', 'student deleted !')
-                    router.push('/app/ManageStudent')
+                      if (this.user.role == 'user') {
+                        router.push('/app/myStudents')
+                    } else if (this.user.role == 'adimn') {
+                        router.push('/app/ManageStudent')
+                    }
                 }).catch((err) => {
                     this.deleteLoading = false;
                     console.log(err.response.data)

@@ -1,6 +1,9 @@
 <template>
     <div>
-        <v-btn color="blue-grey lighten-2" to="/app/ManageStudent" class="mt-10 ml-10">
+        <v-btn v-if="user.role == 'admin'" color="blue-grey lighten-2" to="/app/ManageStudent" class="mt-10 ml-10">
+            back <v-icon right>arrow_back </v-icon>
+        </v-btn>
+        <v-btn v-if="user.role == 'user'" color="blue-grey lighten-2" to="/app/myStudents" class="mt-10 ml-10">
             back <v-icon right>arrow_back </v-icon>
         </v-btn>
         <v-container class="mt-5">
@@ -81,7 +84,12 @@
                                         <v-select :items="sections" v-model="student.section_id" item-text="name"
                                             item-value="id" label="Section" persistent-hint single-line></v-select>
                                     </v-flex>
-                                    <v-flex xs12 sm6 md4>
+                                    <v-flex xs12 sm6 md4 v-if="user.role == 'user'">
+                                        <v-select :items="usersList" v-model="user.id" item-text="name" disabled
+                                            item-value="id" label="Assign Teacher" persistent-hint single-line>
+                                        </v-select>
+                                    </v-flex>
+                                    <v-flex xs12 sm6 md4 v-else>
                                         <v-select :items="usersList" v-model="student.user_id" item-text="name"
                                             item-value="id" label="Assign Teacher" persistent-hint single-line>
                                         </v-select>
@@ -111,14 +119,14 @@
         mapGetters,
         mapActions
     } from "vuex";
-import router from '@/router';
+    // import router from '@/router';
     export default {
         components: {
             alertMessageVue
         },
         data() {
             return {
-                loading:false,
+                loading: false,
                 menu: false,
                 date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
                     .toISOString()
@@ -146,7 +154,8 @@ import router from '@/router';
             ...mapGetters({
                 sections: "section/sections",
                 courses: "courses/courses",
-                usersList: 'auth/usersList'
+                usersList: 'auth/usersList',
+                user: 'auth/user'
             }),
         },
         methods: {
@@ -159,9 +168,13 @@ import router from '@/router';
             save() {
                 console.log(this.student)
                 this.addStudent(this.student).then(() => {
-                    this.loading=false;
-                    Bus.$emit('showalert','student added successfuly !')
-                    router.push('/app/ManageStudent')
+                    this.loading = false;
+                    Bus.$emit('showalert', 'student added successfuly !')
+                    if (this.user.role == 'user') {
+                        // router.push('/app/myStudents')
+                    } else if (this.user.role == 'adimn') {
+                        // router.push('/app/ManageStudent')
+                    }
                 }).catch((err) => {
                     console.log(err.response.data)
                 })

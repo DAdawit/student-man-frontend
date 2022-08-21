@@ -1,8 +1,8 @@
 <template>
     <div>
         <v-app-bar app color="primary" dark flat>
-            <!-- <v-app-bar-nav-icon fab class="white mr-10" small text color="black" @click.stop="drawer = !drawer">
-            </v-app-bar-nav-icon> -->
+            <v-app-bar-nav-icon fab class="white mr-10" small text color="black" @click.stop="drawer = !drawer">
+            </v-app-bar-nav-icon>
             <div class="d-flex align-center">
                 <v-img alt="Vuetify Logo" class="shrink mr-2" to="/" contain
                     src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png" transition="scale-transition"

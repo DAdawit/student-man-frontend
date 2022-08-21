@@ -11,6 +11,7 @@ import manageStudent from '../views/manageStudent.vue'
 import manageSection from '../views/sectionView.vue'
 import addStudent from '../components/Student/addStudent.vue'
 import updateStudent from '../components/Student/updateStudent.vue'
+import myStudents from '../components/teacher/myStudents.vue'
 
 Vue.use(VueRouter)
 
@@ -51,6 +52,10 @@ const routes = [{
         path: 'manageStudent',
         name: 'manageStudent',
         component: manageStudent,
+      },{
+        path: 'myStudents',
+        name: 'myStudents',
+        component: myStudents,
       },
       {
         path: 'manageSection',
