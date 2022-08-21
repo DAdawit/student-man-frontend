@@ -9,6 +9,7 @@ import users from '../components/admin/UsersManage.vue'
 import course from '../views/courseView.vue'
 import manageStudent from '../views/manageStudent.vue'
 import manageSection from '../views/sectionView.vue'
+import addStudent from '../components/Student/addStudent.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,11 @@ const routes = [{
         path: 'users',
         name: 'users',
         component: users,
+      },
+            {
+        path: 'addStudent',
+        name: 'addStudent',
+        component: addStudent,
       },
       {
         path: 'manageStudent',

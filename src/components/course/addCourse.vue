@@ -4,14 +4,14 @@
             <v-dialog v-model="dialog"  max-width="500px">
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn color="primary" v-bind="attrs" v-on="on">
-                        Add Section
+                        Add Course
                         <v-icon right>add</v-icon>
                     </v-btn>
                 </template>
                 <!-- <v-btn color="primary" dark @click="dialog=true">Open Dialog</v-btn> -->
                 <v-card>
                     <v-card-title>
-                        <span class="headline">User Profile</span>
+                        <span class="headline">Add Course</span>
                     </v-card-title>
                     <v-card-text>
                         <v-container grid-list-md>
@@ -56,7 +56,10 @@
         data() {
             return {
                 dialog: false,
-                course: {},
+                course: {
+                    name:'course 1',
+                    description:'course descripton 1'
+                },
                 loading: false
             }
         },

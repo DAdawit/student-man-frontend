@@ -14,10 +14,11 @@
                         </v-col>
                     </v-row>
                 </v-container>
-                <v-col justify-right>
-                </v-col>
+               
             </v-row>
         </v-container>
+        <br>
+        <br>
 <course-list-vue></course-list-vue>
     </div>
 </template>

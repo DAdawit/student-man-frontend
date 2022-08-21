@@ -17,12 +17,12 @@
                         <v-container grid-list-md>
                             <v-layout wrap>
                                 <v-flex xs12 sm12 md12>
-                                    <v-text-field label="Course titile *" required v-model="section.name">
+                                    <v-text-field label="Section titile *" required v-model="section.name">
                                     </v-text-field>
                                 </v-flex>
 
                                 <v-flex xs12 sm12 md12>
-                                    <v-textarea label="Course Description" v-model="section.description"></v-textarea>
+                                    <v-textarea label="Section Description" v-model="section.description"></v-textarea>
                                 </v-flex>
                             </v-layout>
                         </v-container>
@@ -56,7 +56,10 @@
         data() {
             return {
                 dialog: false,
-                section: {},
+                section: {
+                    name:'section 1',
+                    description:'section description 1'
+                },
                 loading: false
             }
         },
