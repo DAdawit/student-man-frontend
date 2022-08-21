@@ -1,11 +1,19 @@
 <template>
     <div>
+        <v-snackbar v-model="snackbar" color="teal darken-1">
+            <span class="white--text"> {{ text }}</span>
+            <template v-slot:action="{ attrs }">
+                <v-icon color="white" v-bind="attrs" @click="snackbar = false">
+                    clear
+                </v-icon>
+            </template>
+        </v-snackbar>
         <template>
             <div class="text-center">
                 <v-dialog v-model="dialog" width="500" persistent>
                     <v-card>
                         <v-card-title class="text-h5 grey lighten-2 justify-center">
-                            <v-icon left color="white">person</v-icon>
+                            <v-icon left color="black">person</v-icon>
                             Student Detail
                         </v-card-title>
 
@@ -64,7 +72,7 @@
                             <th class="text-left">keble</th>
                             <th class="text-left">houseNumber</th>
                             <th class="text-left">section</th>
-                            <th class="text-center" colspan="3">Actions</th>
+                            <th class="text-center" colspan="2">Actions</th>
 
                         </tr>
                     </thead>
@@ -78,20 +86,17 @@
                             <td>{{ student.houseNumber}}</td>
                             <td>{{ student.section.name}}</td>
                             <td>
-                                <v-btn small color="info" outlined @click="showStudentDetail(student)">detail
+                                <v-btn small color="info" outlined @click="showStudentDetail(student)">view
                                     <v-icon right small>visibility</v-icon>
                                 </v-btn>
                             </td>
                             <td>
-                                <v-btn icon color="orange" @click="edit(student)">
-                                    <v-icon small>edit</v-icon>
+                                <v-btn outlined small color="error" router
+                                    :to="{name:'updateStudent',params:{id: student.id}}">detail
+                                    <v-icon right small>settings</v-icon>
                                 </v-btn>
                             </td>
-                            <td>
-                                <v-btn icon color="red" @click="deleteStudent(student.id)" :loading="loading">
-                                    <v-icon small>delete</v-icon>
-                                </v-btn>
-                            </td>
+
                         </tr>
                     </tbody>
                 </template>
@@ -102,20 +107,24 @@
 </template>
 
 <script>
-import {Bus} from '../../main'
-import alertMessageVue from '../alertMessage.vue';
+    import {
+        Bus
+    } from '../../main'
+    import alertMessageVue from '../alertMessage.vue';
     import {
         mapActions,
         mapGetters
     } from 'vuex'
     export default {
-        components:{
+        components: {
             alertMessageVue
         },
         data() {
             return {
                 dialog: false,
-                studentDetail: {}
+                snackbar: false,
+                studentDetail: {},
+                text:''
             }
         },
         computed: {
@@ -126,7 +135,6 @@ import alertMessageVue from '../alertMessage.vue';
         methods: {
             ...mapActions({
                 getSutdents: 'student/getStudents',
-                DeleteStudent: 'student/DeleteStudent'
 
             }),
 
@@ -137,15 +145,13 @@ import alertMessageVue from '../alertMessage.vue';
                 }
                 console.log(student)
             },
-            deleteStudent(id){
-                this.DeleteStudent(id).then(()=>{
-                    Bus.$emit('showalert','student deleted !')
-                }).catch((err)=>{
-                    console.log(err.response.data)
-                })
-            }
+
         },
         created() {
+            Bus.$on("alert", ((data) => {
+                this.text = data
+                this.snackbar = true;
+            }))
             this.getSutdents();
         }
     }

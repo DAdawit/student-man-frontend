@@ -1,6 +1,6 @@
 <template>
   <div class="text-center ma-2">
-    <v-snackbar v-model="snackbar" color="teal darken-1">
+    <v-snackbar v-model="snackbar" color="teal darken-1" top>
       <span class="white--text"> {{ text }}</span>
       <template v-slot:action="{ attrs }">
         <v-icon color="white" v-bind="attrs" @click="snackbar = false">

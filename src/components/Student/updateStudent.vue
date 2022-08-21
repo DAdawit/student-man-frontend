@@ -8,7 +8,7 @@
                 <v-layout row justify-center>
                     <v-card>
                         <v-card-title>
-                            <span class="headline">Add Student</span>
+                            <span class="headline">Student Detail</span>
                         </v-card-title>
                         <v-card-text>
 
@@ -34,7 +34,7 @@
                                         :return-value.sync="student.birthDate" transition="scale-transition" offset-y
                                         min-width="auto">
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-text-field v-model="student.birthDate" label="birth date"
+                                            <v-text-field v-model="student.birthDate" label="Picker in menu"
                                                 prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on">
                                             </v-text-field>
                                         </template>
@@ -74,12 +74,16 @@
                                         <v-text-field label="Grade" v-model="student.grade" required></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-select :items="courses" v-model="student.course_id" item-text="name"
-                                            item-value="id" label="Course" persistent-hint single-line></v-select>
+                                        <template v-if="student.courses">
+                                            <v-select :items="courses" v-model="student.courses[0].pivot.course_id"
+                                                item-text="name" item-value="id" label="Course" persistent-hint
+                                                single-line></v-select>
+                                        </template>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-select :items="sections" v-model="student.section_id" item-text="name"
-                                            item-value="id" label="Section" persistent-hint single-line></v-select>
+                                        <v-select :items="sections" @change="sectionaction" v-model="student.section_id"
+                                            item-text="name" item-value="id" label="Section" persistent-hint
+                                            single-line></v-select>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
                                         <v-select :items="usersList" v-model="student.user_id" item-text="name"
@@ -92,7 +96,13 @@
                             <small>*indicates required field</small>
                         </v-card-text>
                         <v-card-actions>
-                            <v-btn color="blue darken-1" :loading="loading" @click="save">Save</v-btn>
+                            <v-btn color="blue darken-1" :loading="loading" @click="update">update
+                                <v-icon right>update</v-icon>
+                            </v-btn>
+                            <v-btn color="error" class="d-flex justify-end" @click="deleteStu(student.id)"
+                                :loading="deleteLoading">delete
+                                <v-icon right>delete</v-icon>
+                            </v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-layout>
@@ -103,6 +113,7 @@
 </template>
 
 <script>
+    import router from '../../router'
     import {
         Bus
     } from '../../main'
@@ -111,42 +122,28 @@
         mapGetters,
         mapActions
     } from "vuex";
-import router from '@/router';
     export default {
         components: {
             alertMessageVue
         },
         data() {
             return {
-                loading:false,
+                loading: false,
                 menu: false,
+                deleteLoading: false,
+                fd: {},
                 date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
                     .toISOString()
                     .substr(0, 10),
-                student: {
-                    fullName: 'kasu man  girma ',
-                    chName: 'mmmmvmmmv mmm',
-                    motherName: 'kasech man',
-                    phoneNumber: '0936207512',
-                    birthDate: new Date().toISOString().substr(0, 10),
-                    city: 'addis ababa',
-                    wereda: '08',
-                    kebele: '08',
-                    houseNumber: '856',
-                    sex: 'Male',
-                    schoolName: 'beza',
-                    grade: '8',
-                    user_id: '3',
-                    course_id: '2',
-                    section_id: '2',
-                },
+
             };
         },
         computed: {
             ...mapGetters({
                 sections: "section/sections",
                 courses: "courses/courses",
-                usersList: 'auth/usersList'
+                usersList: 'auth/usersList',
+                student: 'student/student'
             }),
         },
         methods: {
@@ -154,24 +151,60 @@ import router from '@/router';
                 getSections: "section/getSections",
                 getCourses: "courses/getCourses",
                 getUsersList: 'auth/getUsersList',
-                addStudent: 'student/addStudent'
+                addStudent: 'student/addStudent',
+                getStudent: 'student/getStudent',
+                updateStudent: 'student/updateStudent',
+                DeleteStudent: 'student/DeleteStudent'
+
+
             }),
-            save() {
-                console.log(this.student)
-                this.addStudent(this.student).then(() => {
-                    this.loading=false;
-                    Bus.$emit('showalert','student added successfuly !')
+            sectionaction(e) {
+                console.log(e)
+            },
+            update() {
+                this.fd.id = this.student.id;
+                this.fd.fullName = this.student.fullName;
+                this.fd.chName = this.student.chName;
+                this.fd.motherName = this.student.motherName;
+                this.fd.phoneNumber = this.student.phoneNumber;
+                this.fd.birthDate = this.student.birthDate;
+                this.fd.city = this.student.city;
+                this.fd.wereda = this.student.wereda;
+                this.fd.kebele = this.student.kebele;
+                this.fd.houseNumber = this.student.houseNumber;
+                this.fd.sex = this.student.sex;
+                this.fd.schoolName = this.student.schoolName;
+                this.fd.grade = this.student.grade;
+                this.fd.user_id = this.student.user_id;
+                this.fd.course_id = this.student.courses[0].pivot.course_id;
+                this.fd.section_id = this.student.section_id;
+                this.loading = true;
+                // console.log(this.fd)
+                this.updateStudent(this.fd).then(() => {
+                    this.loading = false
+                    Bus.$emit('showalert', 'data updated successfuly !')
+                }).catch((err) => {
+                    this.loading = false;
+                    console.log(err.response.data)
+                })
+            },
+            deleteStu(id) {
+                this.deleteLoading = true;
+                this.DeleteStudent(id).then(() => {
+                    this.deleteLoading = false;
+                    Bus.$emit('alert', 'student deleted !')
                     router.push('/app/ManageStudent')
                 }).catch((err) => {
+                    this.deleteLoading = false;
                     console.log(err.response.data)
                 })
             }
         },
         created() {
+            this.getStudent(this.$route.params.id)
             this.getSections();
             this.getCourses();
             this.getUsersList();
-
         },
-    };
+    }
 </script>

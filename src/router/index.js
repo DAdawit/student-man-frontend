@@ -10,6 +10,7 @@ import course from '../views/courseView.vue'
 import manageStudent from '../views/manageStudent.vue'
 import manageSection from '../views/sectionView.vue'
 import addStudent from '../components/Student/addStudent.vue'
+import updateStudent from '../components/Student/updateStudent.vue'
 
 Vue.use(VueRouter)
 
@@ -41,7 +42,7 @@ const routes = [{
         name: 'users',
         component: users,
       },
-            {
+      {
         path: 'addStudent',
         name: 'addStudent',
         component: addStudent,
@@ -60,6 +61,11 @@ const routes = [{
         path: ':id/user',
         name: 'userDetail',
         component: userDetail
+      },
+      {
+        path: ':id/updateStudent',
+        name: 'updateStudent',
+        component: updateStudent
       },
       {
         path: 'course',

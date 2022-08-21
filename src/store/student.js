@@ -1,11 +1,13 @@
 import axios from "axios"
 
 const state={
-    Students:{}
+    Students:{},
+    Student:{}
 }
 
 const getters={
-    students:state=>state.Students
+    students:state=>state.Students,
+    student:state=>state.Student
 }
 
 const actions={
@@ -14,10 +16,19 @@ const actions={
             commit('SET_STUDENTS',res.data)
         })
     },
-
+    async getStudent({commit},id){
+        await axios.get(`/students/${id}`).then((res)=>{
+            commit('SET_STUDENT',res.data)
+        })
+    },
     async addStudent({dispatch},data){
         await axios.post('/students',data).then(()=>{
             dispatch('getStudents')
+        })
+    },
+    async updateStudent({dispatch},data){
+        await axios.put(`/students/${data.id}`,data).then(()=>{
+            dispatch('getStudent',data.id)
         })
     },
 
@@ -31,6 +42,9 @@ const actions={
 const mutations={
     SET_STUDENTS(state,data){
         state.Students=data
+    },
+    SET_STUDENT(state,data){
+        state.Student=data
     }
 }
 

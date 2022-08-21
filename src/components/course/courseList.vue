@@ -41,9 +41,8 @@
 
                         </tr>
                     </thead>
-                    <!-- {{registrationFees.results[0].id}} -->
                     <tbody>
-                        <tr v-for="(course, index) in courses.courses" :key="course.id">
+                        <tr v-for="(course, index) in courses" :key="course.id">
                             <td>{{index+1}}</td>
                             <td>{{ course.name}}</td>
                             <td><small>{{course.description}}</small>
