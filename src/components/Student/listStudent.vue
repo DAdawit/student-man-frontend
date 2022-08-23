@@ -60,7 +60,21 @@
             </div>
         </template>
 
+
+
+
+
         <v-container>
+            <v-row>
+                <v-col placeholder="type full name ..." class="d-flex justify-content-center mx-10">
+                    <v-text-field block prepend-inner-icon="search" v-model="fullname"></v-text-field>
+                </v-col>
+            </v-row>
+        </v-container>
+
+
+        <v-container v-if="searching == true">
+            <p> {{searchReasult.length}} number of results </p>
             <v-simple-table fixed-header class="elevation-1" loading-text="Loading... Please wait">
                 <template v-slot:default>
                     <thead>
@@ -71,7 +85,57 @@
                             <th class="text-left">city</th>
                             <th class="text-left">keble</th>
                             <th class="text-left">houseNumber</th>
-                            <th class="text-left">section</th>
+                            <!-- <th class="text-left">section</th> -->
+                            <th class="text-center" colspan="2">Actions</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(student, index) in searchReasult" :key="student.id">
+                            <td>{{index+1}}</td>
+                            <td>{{ student.fullName}}</td>
+                            <td>{{ student.phoneNumber}}</td>
+                            <td>{{ student.city}}</td>
+                            <td>{{ student.kebele}}</td>
+                            <td>{{ student.houseNumber}}</td>
+                            <!-- <td>{{ student.section.name}}</td> -->
+                            <td>
+                                <v-btn small color="info" outlined @click="showStudentDetail(student)">view
+                                    <v-icon right small>visibility</v-icon>
+                                </v-btn>
+                            </td>
+                            <td>
+                                <v-btn outlined small color="orange" router
+                                    :to="{name:'updateStudent',params:{id: student.id}}">detail
+                                    <v-icon right small>settings</v-icon>
+                                </v-btn>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </template>
+            </v-simple-table>
+        </v-container>
+
+
+
+
+
+
+        <v-container v-if="searching == false">
+                    <v-chip color="primary" class="mb-2">{{students.current_page}} out of {{students.last_page}} pages</v-chip>
+
+            <v-simple-table fixed-header class="elevation-1" loading-text="Loading... Please wait">
+                <template v-slot:default>
+                    <thead>
+                        <tr>
+                            <th class="text-left">#ID</th>
+                            <th class="text-left">name</th>
+                            <th class="text-left">chName</th>
+                            <th class="text-left">phone</th>
+                            <th class="text-left">city</th>
+                            <th class="text-left">keble</th>
+                            <th class="text-left">houseNumber</th>
                             <th class="text-center" colspan="2">Actions</th>
 
                         </tr>
@@ -80,18 +144,18 @@
                         <tr v-for="(student, index) in students.data" :key="student.id">
                             <td>{{index+1}}</td>
                             <td>{{ student.fullName}}</td>
+                            <td>{{ student.chName}}</td>
                             <td>{{ student.phoneNumber}}</td>
                             <td>{{ student.city}}</td>
                             <td>{{ student.kebele}}</td>
                             <td>{{ student.houseNumber}}</td>
-                            <td>{{ student.section.name}}</td>
                             <td>
                                 <v-btn small color="info" outlined @click="showStudentDetail(student)">view
                                     <v-icon right small>visibility</v-icon>
                                 </v-btn>
                             </td>
                             <td>
-                                <v-btn outlined small color="error" router
+                                <v-btn outlined small color="orange" router
                                     :to="{name:'updateStudent',params:{id: student.id}}">detail
                                     <v-icon right small>settings</v-icon>
                                 </v-btn>
@@ -135,6 +199,10 @@
                 current_page: 1,
                 total: 0,
                 last_page: 0,
+                searching: false,
+                searchReasult:[],
+                fullname:''
+
             }
         },
         computed: {
@@ -168,6 +236,18 @@
             current_page(newpage) {
                 this.current_page = newpage
                 this.getSutdents()
+            },
+
+            async fullname(newval) {
+                if (newval.length > 3) {
+                    this.searching = true;
+                    await axios.get(`/search/${newval}`).then((res) => {
+                        console.log(res.data)
+                        this.searchReasult = res.data
+                    })
+                } else {
+                    this.searching = false;
+                }
             }
         },
         created() {
