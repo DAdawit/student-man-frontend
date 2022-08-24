@@ -67,7 +67,7 @@
         <v-container>
             <v-row>
                 <v-col placeholder="type full name ..." class="d-flex justify-content-center mx-10">
-                    <v-text-field block prepend-inner-icon="search" v-model="fullname"></v-text-field>
+                    <v-text-field outlined label="Search" block prepend-inner-icon="search" v-model="fullname"></v-text-field>
                 </v-col>
             </v-row>
         </v-container>
