@@ -1,67 +1,70 @@
 <template>
     <div>
         <router-view></router-view>
-        <!-- {{userDetali}} -->
-
-        <!-- {{userStudents}} -->
-        <!-- <pre>userStudents</pre> -->
+        <v-btn  color="blue-grey lighten-2" to="/app/users" class="mt-10 ml-10">
+            back <v-icon right>arrow_back </v-icon>
+        </v-btn>
         <v-container>
             <v-row>
-                <v-col cols="12" class="d-flex justify-end">
-                    <v-card width="30%">
-                        <!-- <v-card-title class="d-flex justify-center">user </v-card-title> -->
-                        <div class="back">
-                            <v-card-text class="d-flex justify-center ">
-                                <template>
-                                    <v-avatar size="100">
-                                        <v-img src="/logo.jpg"
-                                            lazy-src="https://image.freepik.com/free-vector/user-icon_126283-435.jpg">
-                                        </v-img>
-                                    </v-avatar>
+                <v-col cols="12" lg="6" md="6" sm="12">
+                    <v-card>
+                        <v-card-title class="d-flex justify-center grey-text">Update User</v-card-title>
+                        <v-divider class="mb-5"></v-divider>
+                        <v-row class="d-flex justify-center py-5">
+                            <v-col cols="10">
+                                <v-text-field v-model="userDetali.name" label="Full Name" placeholder="Full Name" dense
+                                    outlined>
+                                </v-text-field>
+                                <v-text-field v-model="userDetali.email" label="Email" placeholder="E-mail" dense
+                                    outlined>
+                                </v-text-field>
+                                <small class="red--text" small> {{error}}</small>
+
+                            </v-col>
+                            <template v-if="showError">
+
+                                <template v-if="errors.email != null">
+                                    <small class="red--text" small> {{errors.email[0]}}</small>
                                 </template>
                                 <br>
-                            </v-card-text>
-                            <v-divider></v-divider>
-                            <v-card-subtitle class="d-flex justify-center">{{userDetali.name}}</v-card-subtitle>
-                            <article class="d-flex justify-center">{{userDetali.email}}</article>
-                            <article class="d-flex justify-center">{{userDetali.role}}</article>
-                        </div>
+                                <template v-if="errors.password">
+                                    <small class="red--text" small> {{errors.password[0]}}</small>
+                                </template>
+
+                            </template>
+                            <v-col cols="10">
+                                <v-btn block class="primary mb-10" type="submit" :loading="loading">update
+                                    <v-icon right>update</v-icon>
+
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-card>
+                </v-col>
+                <v-col cols="12" lg="6" md="12" sm="3">
+                    <v-card class="py-10">
+                        <v-card-title class="d-flex justify-center">
+                            Reset Password
+                        </v-card-title>
+                        <v-divider class="mx-3 mb-5"></v-divider>
+                        <reset-password :userDetail="userDetali"></reset-password>
                     </v-card>
                 </v-col>
             </v-row>
-
-            <v-row>
-                <v-col class="d-flex justify-start">
-                    <div>
-                        <v-card max-width="300" tile>
-                            <v-list disabled>
-                                <v-subheader>REPORTS</v-subheader>
-                                <v-list-item-group v-model="selectedItem" color="primary">
-                                    <v-list-item v-for="(item, i) in items" :key="i">
-                                        <v-list-item-icon>
-                                            <v-icon v-text="item.icon"></v-icon>
-                                        </v-list-item-icon>
-                                        <v-list-item-content>
-                                            <v-list-item-title v-text="item.text"></v-list-item-title>
-                                        </v-list-item-content>
-                                    </v-list-item>
-                                </v-list-item-group>
-                            </v-list>
-                        </v-card>
-                    </div>
-                </v-col>
-            </v-row>
-
         </v-container>
     </div>
 </template>
 
 <script>
+    import resetPassword from '../Signup/resetPassword.vue'
     import {
         mapGetters,
         mapActions
     } from 'vuex'
     export default {
+        components: {
+            resetPassword
+        },
         data() {
             return {
                 selectedItem: 1,

@@ -57,8 +57,13 @@
                         route: '/app/dashboard'
                     },
                     {
+                        title: 'Profile',
+                        icon: 'account_circle',
+                        route: '/app/myProfile'
+                    },
+                    {
                         title: 'Manage Account',
-                        icon: 'mdi-account-box',
+                        icon: 'admin_panel_settings',
                         route: '/app/users',
                         role: 'admin'
                     },
@@ -85,7 +90,11 @@
                         icon: 'mdi-view-dashboard',
                         route: '/app/dashboard'
                     },
-
+                    {
+                        title: 'Profile',
+                        icon: 'account_circle',
+                        route: '/app/myProfile'
+                    },
                     {
                         title: 'My Students',
                         icon: 'group',
