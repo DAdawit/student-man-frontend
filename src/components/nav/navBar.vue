@@ -14,9 +14,9 @@
 
             <v-spacer></v-spacer>
             <template>
-                <SignUp v-if="auth == null"></SignUp>
+                <!-- <SignUp v-if="auth == null"></SignUp> -->
 
-                <v-btn v-else color="white" outlined depressed @click="logout()">
+                <v-btn v-if="auth != null" color="white" outlined depressed @click="logout()">
                     logout
                     <v-icon small right>logout</v-icon>
                 </v-btn>
@@ -45,7 +45,7 @@
         mapGetters,
         mapActions
     } from 'vuex'
-    import SignUp from '../signUp.vue'
+    // import SignUp from '../signUp.vue'
 
     export default {
         data() {
@@ -54,7 +54,7 @@
             }
         },
         components: {
-            SignUp,
+            // SignUp,
             navigationDrawerVue
         },
         computed: {
