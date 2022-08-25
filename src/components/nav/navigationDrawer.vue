@@ -59,7 +59,7 @@
                     {
                         title: 'Profile',
                         icon: 'account_circle',
-                        route: '/app/myProfile'
+                        route: '/app/profile'
                     },
                     {
                         title: 'Manage Account',
@@ -93,7 +93,7 @@
                     {
                         title: 'Profile',
                         icon: 'account_circle',
-                        route: '/app/myProfile'
+                        route: '/app/profile'
                     },
                     {
                         title: 'My Students',

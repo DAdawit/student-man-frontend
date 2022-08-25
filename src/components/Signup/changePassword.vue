@@ -2,26 +2,24 @@
     <div class="text-center">
         <v-dialog v-model="dialog" persistent max-width="500">
             <template v-slot:activator="{ on, attrs }">
-                <v-btn  color="blue lighten-2" dark v-bind="attrs" v-on="on">
-                    Reset password
+                <v-btn  color="primary" dark v-bind="attrs" v-on="on">
+                    Change Password
                     <v-icon right>build</v-icon>
                 </v-btn>
             </template>
 
             <v-card>
                 <v-card-title class="d-flex justify-center text--secondary">
-                    Reset password
+                    Change password
                 </v-card-title>
-                <v-card-subtitle class="d-flex justify-center text--secondary">
-                    user: {{userDetail.name}} {{userDetail.email}}
-                </v-card-subtitle>
+
                 <v-divider class="mx-5 mb-2"></v-divider>
 
                 <v-form ref="registerForm" v-model="valid" lazy-validation>
                     <v-container>
                         <v-row class="d-flex justify-center">
                             <v-col cols="10" sm="10" md="10" lg="10">
-                                <v-text-field v-model="userData.old_password" outlined dense disabled
+                                <v-text-field v-model="userData.old_password" outlined dense 
                                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                     :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'"
                                     name="input-10-1" label="old password" hint="At least 3 characters" counter
@@ -37,7 +35,7 @@
                                 </v-text-field>
                             </v-col>
                             <v-col cols="12" sm="10" md="10" lg="10">
-                                <v-text-field block v-model="verify" outlined dense
+                                <v-text-field block v-model="password_confirmation" outlined dense
                                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                     :rules="[rules.required, passwordMatch]" :type="show1 ? 'text' : 'password'"
                                     name="input-10-1" label="verify Password" counter @click:append="show1 = !show1">
@@ -47,7 +45,7 @@
                         <v-row class="d-flex justify-content-center">
                             <p class="text-danger small overline">{{error}}</p>
                         </v-row>
-                        <v-card-actions class="d-flex justify-content-center">
+                        <v-card-actions class="d-flex justify-center">
                             <v-spacer></v-spacer>
                             <v-btn color="primary" @click="dialog = false">
                                 cancel
@@ -65,17 +63,14 @@
 </template>
 <script>
 import alertMessageVue from '../alertMessage.vue';
-    import {
-        Bus
-    } from '../../main'
+import {Bus} from '../../main'
     import {
         mapGetters,
         mapActions
     } from 'vuex';
     export default {
-        props: ['userDetail'],
         components:{
-            alertMessageVue
+alertMessageVue
         },
         data() {
             return {
@@ -84,7 +79,7 @@ import alertMessageVue from '../alertMessage.vue';
                     min: v => (v && v.length >= 3) || "Min 3 characters"
                 },
                 dialog: false,
-                verify: "",
+                password_confirmation: "",
                 valid: true,
                 show: false,
                 error: '',
@@ -93,6 +88,7 @@ import alertMessageVue from '../alertMessage.vue';
                 userData: {
                     old_password: 'pass',
                     new_password: 'pass',
+                    password_confirmation:'pass',
                     id: ''
                 }
             }
@@ -102,18 +98,18 @@ import alertMessageVue from '../alertMessage.vue';
                 user: 'auth/user'
             }),
             passwordMatch() {
-                return () => this.userData.new_password === this.verify || "Password must match";
+                return () => this.userData.new_password === this.password_confirmation || "Password must match";
             },
         },
         methods: {
             ...mapActions({
-                resetUserPassword: 'auth/resetUserPassword'
+                changeUserPassword: 'auth/changePassword'
             }),
             changePassword() {
                 this.loading = true;
-                this.userData.id = this.$route.params.id;
-                this.resetUserPassword(this.userData).then(() => {
-                    Bus.$emit('showalert','user password reseted ')
+                this.userData.id = this.user.id;
+                this.changeUserPassword(this.userData).then(() => {
+                    Bus.$emit('showalert','passwordChanged')
                     this.dialog = false;
                     this.loading = false;
                 }).catch((err) => {

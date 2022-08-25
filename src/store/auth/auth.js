@@ -52,8 +52,11 @@ const actions = {
             dispatch('getUsersList')
         })
     },
-    async CangeUserPassword(_,data){
+    async resetUserPassword(_,data){
         return await axios.post('/resetPassword',data)
+    },
+    async changePassword(_,data){
+        return await axios.post('/changePassword',data)
     },
 
 

@@ -12,6 +12,7 @@ import manageSection from '../views/sectionView.vue'
 import addStudent from '../components/Student/addStudent.vue'
 import updateStudent from '../components/Student/updateStudent.vue'
 import myStudents from '../components/teacher/myStudents.vue'
+import profile from '../components/profile/userProfile.vue'
 
 Vue.use(VueRouter)
 
@@ -76,6 +77,11 @@ const routes = [{
         path: 'course',
         name: 'course',
         component: course
+      },
+       {
+        path: 'profile',
+        name: 'profile',
+        component: profile
       },
     ]
   },
