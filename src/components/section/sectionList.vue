@@ -155,6 +155,10 @@
             },
         },
         created() {
+            Bus.$on('fetchSection',(()=>{
+                this.current_page=1;
+                this.getSections()
+            }))
             this.getSections();
         }
     }

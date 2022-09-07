@@ -16,49 +16,60 @@
 
                 <v-card-text>
                     <div class="d-flex justify-center">
-                        <form @submit="signup">
-                            <!-- <v-row class="d-flex justify-center pt-5">
-        </v-row> -->
-                            <v-row class="d-flex justify-center py-5">
-                                <v-col cols="10">
-                                    <v-text-field v-model="user.name" label="Full Name" placeholder="Full Name" dense
-                                        outlined>
-                                    </v-text-field>
-                                    <v-text-field v-model="user.email" label="Email" placeholder="E-mail" dense
-                                        outlined>
-                                    </v-text-field>
-                                    <small class="red--text" small> {{error}}</small>
-                                    <v-text-field v-model="user.password" label="password" placeholder="Password" dense
-                                        outlined :type="show1 ? 'text' : 'password'"
-                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" @click:append="show1 = !show1">
-                                    </v-text-field>
-                                    <v-text-field v-model="user.password_confirmation" label="Confirm Password"
-                                        placeholder="Confirm Password" dense outlined
-                                        :type="show1 ? 'text' : 'password'"
-                                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" @click:append="show1 = !show1">
-                                    </v-text-field>
-                                    <!-- <router-link to="/forgetPassword" class="d-flex justify-end"><small>forget
-                                            password?</small></router-link> -->
-                                </v-col>
-                                <template v-if="showError">
+                        <ValidationObserver v-slot="{ handleSubmit }">
+                            <form @submit.prevent="handleSubmit(signup)">
+                                <v-row class="d-flex justify-center py-5">
+                                    <v-col cols="10">
+                                        <ValidationProvider rules="required" name="Full Name" v-slot="{ errors }">
+                                            <v-text-field v-model="user.name" label="Full Name" placeholder="Full Name"
+                                                dense outlined :error="errors.length > 0" :error-messages="errors[0]">
+                                            </v-text-field>
+                                        </ValidationProvider>
 
-                                    <template v-if="errors.email != null">
-                                        <small class="red--text" small> {{errors.email[0]}}</small>
+                                        <ValidationProvider rules="required|email" name="Email" v-slot="{ errors }">
+                                            <v-text-field v-model="user.email" label="Email" placeholder="E-mail" dense
+                                                outlined :error="errors.length > 0" :error-messages="errors[0]">
+                                            </v-text-field>
+                                        </ValidationProvider>
+                                        <ValidationProvider rules="required" name="password" v-slot="{ errors }">
+                                            <v-text-field v-model="user.password" label="password" ref="password"
+                                                placeholder="Password" dense outlined :error="errors.length > 0"
+                                                :error-messages="errors[0]" :type="show1 ? 'text' : 'password'"
+                                                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                @click:append="show1 = !show1">
+                                            </v-text-field>
+                                        </ValidationProvider>
+                                        <ValidationProvider rules="required|confirmed:password" name="confirm password"
+                                            v-slot="{ errors }">
+                                            <v-text-field  label="Confirm Password"  v-model="user.password_confirmation"
+                                                placeholder="Confirm Password" dense outlined
+                                                :type="show1 ? 'text' : 'password'"
+                                                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                @click:append="show1 = !show1" :error="errors.length > 0"
+                                                :error-messages="errors[0]">
+                                            </v-text-field>
+                                        </ValidationProvider>
+                                    </v-col>
+                                    <template v-if="showError">
+
+                                        <template v-if="errors.email != null">
+                                            <small class="red--text" small> {{errors.email[0]}}</small>
+                                        </template>
+                                        <br>
+                                        <template v-if="errors.password">
+                                            <small class="red--text" small> {{errors.password[0]}}</small>
+                                        </template>
+
                                     </template>
-                                    <br>
-                                    <template v-if="errors.password">
-                                        <small class="red--text" small> {{errors.password[0]}}</small>
-                                    </template>
+                                    <v-col cols="10">
+                                        <v-btn block class="primary mb-10" type="submit" :loading="loading">Register
+                                            <v-icon right>person_add</v-icon>
 
-                                </template>
-                                <v-col cols="10">
-                                    <v-btn block class="primary mb-10" type="submit" :loading="loading">Register
-                                        <v-icon right>person_add</v-icon>
-
-                                    </v-btn>
-                                </v-col>
-                            </v-row>
-                        </form>
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+                            </form>
+                        </ValidationObserver>
                     </div>
                 </v-card-text>
             </v-card>
@@ -70,13 +81,15 @@
 
 
 <script>
-    import {Bus} from '../../main'
+    import {
+        Bus
+    } from '../../main'
     import alertMessageVue from '../alertMessage.vue';
     import {
         mapActions
     } from 'vuex';
     export default {
-        components:{
+        components: {
             alertMessageVue
         },
 
@@ -85,11 +98,10 @@
                 loading: false,
                 show1: false,
                 user: {
-                    name: 'girma',
-                    email: 'girma@gmail.com',
-                    password: 'pass',
-                    password_confirmation: 'pass1'
-
+                    name: '',
+                    email: '',
+                    password: '',
+                    password_confirmation: ''
                 },
                 dialog: false,
                 error: '',
@@ -106,13 +118,12 @@
             ...mapActions({
                 registerUser: 'auth/registerUser'
             }),
-            signup(e) {
-                e.preventDefault();
+            signup() {
                 this.loading = true
                 this.registerUser(this.user).then(() => {
                     this.dialog = false
                     this.loading = false
-                    Bus.$emit('showalert','New user added')
+                    Bus.$emit('showalert', 'New user added')
                     Bus.$emit('fetchUsers')
                 }).catch((err) => {
                     this.showError = true

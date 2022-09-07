@@ -153,6 +153,10 @@
             },
         },
         created() {
+            Bus.$on('fetchCourse', (() => {
+                this.current_page = 1;
+                this.getCourses()
+            }))
             this.getCourses();
         }
     }
