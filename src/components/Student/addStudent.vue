@@ -17,25 +17,25 @@
                             <v-container grid-list-md>
                                 <v-layout wrap>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Full Name" v-model="student.fullName" required>
+                                        <v-text-field label="Full Name/ ሙሉ ስም" v-model="student.fullName" required>
                                         </v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Cristianity Name" v-model="student.chName"></v-text-field>
+                                        <v-text-field label="Christian name / የክርስትና ስም" v-model="student.chName"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Mother Name" v-model="student.motherName" required>
+                                        <v-text-field label="Mother Name / የእናት ስም" v-model="student.motherName" required>
                                         </v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Phone Number" v-model="student.phoneNumber" required>
+                                        <v-text-field label="Phone Number / ስልክ ቁጥር" v-model="student.phoneNumber" required>
                                         </v-text-field>
                                     </v-flex>
                                     <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
                                         :return-value.sync="student.birthDate" transition="scale-transition" offset-y
                                         min-width="auto">
                                         <template v-slot:activator="{ on, attrs }">
-                                            <v-text-field v-model="student.birthDate" label="birth date"
+                                            <v-text-field v-model="student.birthDate" label="birth date /የተወለደበት(ችበት) ቀን"
                                                 prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on">
                                             </v-text-field>
                                         </template>
@@ -48,46 +48,46 @@
                                         </v-date-picker>
                                     </v-menu>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field label="City" v-model="student.city" required></v-text-field>
+                                        <v-text-field label="City / አድራሻ ክ/ከተማ" v-model="student.city" required></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Wereda" v-model="student.wereda" required></v-text-field>
+                                        <v-text-field label="Wereda / ወረዳ" v-model="student.wereda" required></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Kebele" v-model="student.kebele" required></v-text-field>
+                                        <v-text-field label="Kebele / ቀበሌ" v-model="student.kebele" required></v-text-field>
                                     </v-flex>
 
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field label="House Number" v-model="student.houseNumber"></v-text-field>
+                                        <v-text-field label="House Number / የቤት ቁጥር" v-model="student.houseNumber"></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-select v-model="student.sex" label="Sex" required
+                                        <v-select v-model="student.sex" label="Gender / ጾታ" required
                                             :items="['Male', 'Female']">
                                         </v-select>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field label="School Name" v-model="student.schoolName" required>
+                                        <v-text-field label="School Name / የሚማርበት(የምትማርበት) ት/ቤት" v-model="student.schoolName" required>
                                         </v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Grade" v-model="student.grade" required></v-text-field>
+                                        <v-text-field label="Grade / የትምህርት ደረጃ" v-model="student.grade" required></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
                                         <v-select :items="courses.data" v-model="student.course_id" item-text="name"
-                                            item-value="id" label="Course" persistent-hint single-line></v-select>
+                                            item-value="id" label="Course / ኮርስ" persistent-hint single-line></v-select>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
                                         <v-select :items="sections.data" v-model="student.section_id" item-text="name"
-                                            item-value="id" label="Section" persistent-hint single-line></v-select>
+                                            item-value="id" label="Section / ክፍል " persistent-hint single-line></v-select>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4 v-if="user.role == 'user'">
                                         <v-select :items="usersList.data" v-model="user.id" item-text="name" disabled
-                                            item-value="id" label="Assign Teacher" persistent-hint single-line>
+                                            item-value="id" label="Assign Teacher / መምህር" persistent-hint single-line>
                                         </v-select>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4 v-else>
                                         <v-select :items="usersList.data" v-model="student.user_id" item-text="name"
-                                            item-value="id" label="Assign Teacher" persistent-hint single-line>
+                                            item-value="id" label="Assign Teacher / መምህር" persistent-hint single-line>
                                         </v-select>
                                     </v-flex>
                                 </v-layout>
