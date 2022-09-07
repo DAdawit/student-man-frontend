@@ -14,9 +14,15 @@ userStudents:state=>state.UserStudents
 const actions={
     async getUserDetail({commit},id){
         await axios.get(`/getUser/${id}`).then((res)=>{
-            console.log(res.data)
+            // console.log(res.data)
             commit('SET_USER_DETAIL',res.data)
         })
+    },
+
+    async updateUser({dispatch},data){
+       return await axios.patch(`/editUser/${data.id}`,data).then(()=>{
+        dispatch('getUserDetail',data.id)
+       })
     },
 
     async getUserStudents({commit},id){

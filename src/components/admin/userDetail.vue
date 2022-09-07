@@ -1,7 +1,7 @@
 <template>
     <div>
         <router-view></router-view>
-        <v-btn  color="blue-grey lighten-2" to="/app/users" class="mt-10 ml-10">
+        <v-btn color="blue-grey lighten-2" to="/app/users" class="mt-10 ml-10">
             back <v-icon right>arrow_back </v-icon>
         </v-btn>
         <v-container>
@@ -18,24 +18,15 @@
                                 <v-text-field v-model="userDetali.email" label="Email" placeholder="E-mail" dense
                                     outlined>
                                 </v-text-field>
+                                <template v-if="show">
                                 <small class="red--text" small> {{error}}</small>
+                                </template>
 
                             </v-col>
-                            <template v-if="showError">
-
-                                <template v-if="errors.email != null">
-                                    <small class="red--text" small> {{errors.email[0]}}</small>
-                                </template>
-                                <br>
-                                <template v-if="errors.password">
-                                    <small class="red--text" small> {{errors.password[0]}}</small>
-                                </template>
-
-                            </template>
                             <v-col cols="10">
-                                <v-btn block class="primary mb-10" type="submit" :loading="loading">update
+                                <v-btn block class="primary mb-10" type="submit" :loading="loading" @click="update()">
+                                    update
                                     <v-icon right>update</v-icon>
-
                                 </v-btn>
                             </v-col>
                         </v-row>
@@ -52,10 +43,15 @@
                 </v-col>
             </v-row>
         </v-container>
+        <alert-message-vue></alert-message-vue>
     </div>
 </template>
 
 <script>
+    import {
+        Bus
+    } from '../../main'
+    import alertMessageVue from '../alertMessage.vue'
     import resetPassword from '../Signup/resetPassword.vue'
     import {
         mapGetters,
@@ -63,11 +59,15 @@
     } from 'vuex'
     export default {
         components: {
-            resetPassword
+            resetPassword,
+            alertMessageVue
         },
         data() {
             return {
                 selectedItem: 1,
+                error: '',
+                loading:false,
+                show:false,
                 items: [{
                         text: 'Real-Time',
                         icon: 'mdi-clock'
@@ -92,8 +92,24 @@
         methods: {
             ...mapActions({
                 getUserDetail: 'userMan/getUserDetail',
-                getUserStudents: 'userMan/getUserStudents'
-            })
+                getUserStudents: 'userMan/getUserStudents',
+                updateUser: 'userMan/updateUser'
+
+            }),
+
+            update() {
+                this.show=false;
+                this.loading=true;
+                this.updateUser(this.userDetali).then(() => {
+                    Bus.$emit('showalert', 'user data updated ')
+                    this.loading=false
+                }).catch((err)=>{
+                    this.loading=false;
+                    this.error=err.response.data.errors.email[0];
+                    this.show=true;
+                })
+            }
+            
         },
         created() {
             this.getUserDetail(this.$route.params.id)

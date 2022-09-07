@@ -44,7 +44,6 @@ import axios from 'axios'
     methods:{
         signup(e){
           e.preventDefault();
-          
           axios.post('/register',this.user).then((res)=>{
             console.log(res.data);
           })

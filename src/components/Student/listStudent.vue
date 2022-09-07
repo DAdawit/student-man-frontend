@@ -1,6 +1,8 @@
 <template>
     <div>
-        <v-snackbar v-model="snackbar" color="teal darken-1">
+
+
+        <v-snackbar v-model="snackbar" color="teal darken-1" top>
             <span class="white--text"> {{ text }}</span>
             <template v-slot:action="{ attrs }">
                 <v-icon color="white" v-bind="attrs" @click="snackbar = false">
@@ -8,6 +10,8 @@
                 </v-icon>
             </template>
         </v-snackbar>
+
+
         <template>
             <div class="text-center">
                 <v-dialog v-model="dialog" width="500" persistent>
@@ -25,11 +29,15 @@
                             </h3>
                             <h3 class="caption">Phone Number:{{studentDetail.phoneNumber}}
                             </h3>
+
                             <h3 class="caption">Address:{{studentDetail.city}}
                                 w/{{studentDetail.wereda}}
                                 k/{{studentDetail.kebele}}
                             </h3>
                             <h3 class="caption">House Number:{{studentDetail.houseNumber}}
+                            </h3>
+                            <h3 class="caption">Registration-Date
+                                :{{moment(studentDetail.created_at).format('YYYY-MM--DD')}}
                             </h3>
                             <h3 class="overline text-decoration-underline">School</h3>
                             <h3 class="caption">{{studentDetail.schoolName}} Grade {{studentDetail.grade}}</h3>
@@ -67,7 +75,8 @@
         <v-container>
             <v-row>
                 <v-col placeholder="type full name ..." class="d-flex justify-content-center mx-10">
-                    <v-text-field outlined label="Search" block prepend-inner-icon="search" v-model="fullname"></v-text-field>
+                    <v-text-field outlined label="Search" block prepend-inner-icon="search" v-model="fullname">
+                    </v-text-field>
                 </v-col>
             </v-row>
         </v-container>
@@ -123,7 +132,7 @@
 
 
         <v-container v-if="searching == false">
-                    <v-chip color="primary" class="mb-2">{{students.current_page}} out of {{students.last_page}} pages</v-chip>
+            <v-chip color="primary" class="mb-2">{{students.current_page}} out of {{students.last_page}} pages</v-chip>
 
             <v-simple-table fixed-header class="elevation-1" loading-text="Loading... Please wait">
                 <template v-slot:default>
@@ -200,8 +209,9 @@
                 total: 0,
                 last_page: 0,
                 searching: false,
-                searchReasult:[],
-                fullname:''
+                searchReasult: [],
+                addStudentsanckbar: false,
+                fullname: ''
 
             }
         },
@@ -212,7 +222,7 @@
         },
         methods: {
             ...mapActions({
-                getSutdents: 'student/getStudents',
+                // getSutdents: 'student/getStudents',
 
             }),
 
@@ -251,11 +261,11 @@
             }
         },
         created() {
-            Bus.$on("alert", ((data) => {
-                this.text = data
+            Bus.$on("alertMessage", ((data) => {
                 this.snackbar = true;
+                this.text = data
             }))
             this.getSutdents();
-        }
+        },
     }
 </script>

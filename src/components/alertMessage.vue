@@ -8,14 +8,6 @@
         </v-icon>
       </template>
     </v-snackbar>
-    <v-snackbar v-model="error" color="red darken-2">
-      <span class="white--text"> {{ text }}</span>
-      <template v-slot:action="{ attrs }">
-        <v-icon color="white" v-bind="attrs" @click="error = false">
-          clear
-        </v-icon>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 <script>

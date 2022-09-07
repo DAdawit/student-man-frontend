@@ -63,16 +63,23 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <alert-message-vue></alert-message-vue>
     </div>
 </template>
 
 
 
 <script>
+    import {Bus} from '../../main'
+    import alertMessageVue from '../alertMessage.vue';
     import {
         mapActions
     } from 'vuex';
     export default {
+        components:{
+            alertMessageVue
+        },
+
         data() {
             return {
                 loading: false,
@@ -105,6 +112,8 @@
                 this.registerUser(this.user).then(() => {
                     this.dialog = false
                     this.loading = false
+                    Bus.$emit('showalert','New user added')
+                    Bus.$emit('fetchUsers')
                 }).catch((err) => {
                     this.showError = true
                     this.loading = false

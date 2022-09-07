@@ -14,10 +14,8 @@
                             <span class="headline">Add Student</span>
                         </v-card-title>
                         <v-card-text>
-
                             <v-container grid-list-md>
                                 <v-layout wrap>
-
                                     <v-flex xs12 sm6 md4>
                                         <v-text-field label="Full Name" v-model="student.fullName" required>
                                         </v-text-field>
@@ -43,9 +41,7 @@
                                         </template>
                                         <v-date-picker v-model="student.birthDate" no-title scrollable>
                                             <v-spacer></v-spacer>
-                                            <v-btn text color="primary" @click="menu = false">
-                                                Cancel
-                                            </v-btn>
+                                            <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
                                             <v-btn text color="primary" @click="$refs.menu.save(student.birthDate)">
                                                 OK
                                             </v-btn>
@@ -77,24 +73,23 @@
                                         <v-text-field label="Grade" v-model="student.grade" required></v-text-field>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-select :items="courses" v-model="student.course_id" item-text="name"
+                                        <v-select :items="courses.data" v-model="student.course_id" item-text="name"
                                             item-value="id" label="Course" persistent-hint single-line></v-select>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-select :items="sections" v-model="student.section_id" item-text="name"
+                                        <v-select :items="sections.data" v-model="student.section_id" item-text="name"
                                             item-value="id" label="Section" persistent-hint single-line></v-select>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4 v-if="user.role == 'user'">
-                                        <v-select :items="usersList" v-model="user.id" item-text="name" disabled
+                                        <v-select :items="usersList.data" v-model="user.id" item-text="name" disabled
                                             item-value="id" label="Assign Teacher" persistent-hint single-line>
                                         </v-select>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4 v-else>
-                                        <v-select :items="usersList" v-model="student.user_id" item-text="name"
+                                        <v-select :items="usersList.data" v-model="student.user_id" item-text="name"
                                             item-value="id" label="Assign Teacher" persistent-hint single-line>
                                         </v-select>
                                     </v-flex>
-
                                 </v-layout>
                             </v-container>
                             <small>*indicates required field</small>
@@ -111,42 +106,41 @@
 </template>
 
 <script>
-    import {
-        Bus
-    } from '../../main'
+    import {Bus} from "../../main";
+    // import router from "@/router";
     import alertMessageVue from "../alertMessage.vue";
     import {
         mapGetters,
         mapActions
     } from "vuex";
-    // import router from '@/router';
     export default {
         components: {
-            alertMessageVue
+            alertMessageVue,
         },
         data() {
             return {
                 loading: false,
                 menu: false,
+                text: '',
                 date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
                     .toISOString()
                     .substr(0, 10),
                 student: {
-                    fullName: 'kasu man  girma ',
-                    chName: 'mmmmvmmmv mmm',
-                    motherName: 'kasech man',
-                    phoneNumber: '0936207512',
+                    fullName: "kasu man  girma ",
+                    chName: "mmmmvmmmv mmm",
+                    motherName: "kasech man",
+                    phoneNumber: "0936207512",
                     birthDate: new Date().toISOString().substr(0, 10),
-                    city: 'addis ababa',
-                    wereda: '08',
-                    kebele: '08',
-                    houseNumber: '856',
-                    sex: 'Male',
-                    schoolName: 'beza',
-                    grade: '8',
-                    user_id: '3',
-                    course_id: '2',
-                    section_id: '2',
+                    city: "addis ababa",
+                    wereda: "08",
+                    kebele: "08",
+                    houseNumber: "856",
+                    sex: "Male",
+                    schoolName: "beza",
+                    grade: "8",
+                    user_id: "3",
+                    course_id: "2",
+                    section_id: "2",
                 },
             };
         },
@@ -154,37 +148,46 @@
             ...mapGetters({
                 sections: "section/sections",
                 courses: "courses/courses",
-                usersList: 'auth/usersList',
-                user: 'auth/user'
+                usersList: "auth/usersList",
+                user: "auth/user",
             }),
         },
         methods: {
             ...mapActions({
                 getSections: "section/getSections",
                 getCourses: "courses/getCourses",
-                getUsersList: 'auth/getUsersList',
-                addStudent: 'student/addStudent'
+                getUsersList: "auth/getUsersList",
+                addStudent: "student/addStudent",
             }),
             save() {
-                console.log(this.student)
-                this.addStudent(this.student).then(() => {
-                    this.loading = false;
-                    Bus.$emit('showalert', 'student added successfuly !')
-                    if (this.user.role == 'user') {
-                        // router.push('/app/myStudents')
-                    } else if (this.user.role == 'adimn') {
-                        // router.push('/app/ManageStudent')
-                    }
-                }).catch((err) => {
-                    console.log(err.response.data)
-                })
-            }
+                console.log(this.student);
+                this.addStudent(this.student)
+                    .then(() => {
+
+                        // if (confirm("Press a button!") == true) {
+                        //     this.text = "You pressed OK!";
+                        // } else {
+                        //     this.text = "You canceled!";
+                        // }
+                        // Bus.$emit("alert",'student added !')
+                        // window.confirm('are u sure you went to add');
+                        window.alert('student added')
+                        if(this.user.role === 'admin'){
+                            this.$router.push("/app/ManageStudent");
+                            Bus.$emit('alert','student added')
+                        }else{
+                            this.$router.push("/app/myStudents");
+                            Bus.$emit('alert','student added')
+                        }
+                    }).catch((err) => {
+                        console.log(err.response.data);
+                    });
+            },
         },
         created() {
             this.getSections();
             this.getCourses();
             this.getUsersList();
-
         },
     };
 </script>

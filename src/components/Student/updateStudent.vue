@@ -78,18 +78,18 @@
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
                                         <template v-if="student.courses">
-                                            <v-select :items="courses" v-model="student.courses[0].pivot.course_id"
+                                            <v-select :items="courses.data" v-model="student.courses[0].pivot.course_id"
                                                 item-text="name" item-value="id" label="Course" persistent-hint
                                                 single-line></v-select>
                                         </template>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-select :items="sections" @change="sectionaction" v-model="student.section_id"
-                                            item-text="name" item-value="id" label="Section" persistent-hint
-                                            single-line></v-select>
+                                        <v-select :items="sections.data" @change="sectionaction"
+                                            v-model="student.section_id" item-text="name" item-value="id"
+                                            label="Section" persistent-hint single-line></v-select>
                                     </v-flex>
                                     <v-flex xs12 sm6 md4>
-                                        <v-select :items="usersList" v-model="student.user_id" item-text="name"
+                                        <v-select :items="usersList.data" v-model="student.user_id" item-text="name"
                                             item-value="id" label="Assign Teacher" persistent-hint single-line>
                                         </v-select>
                                     </v-flex>
@@ -192,20 +192,35 @@
                     console.log(err.response.data)
                 })
             },
+            changeRoute() {
+                if(this.user.role == "user") {
+                    router.push('/app/myStudents');
+                } else if (this.user.role == "admin") {
+                    router.push('/app/ManageStudent');
+                    Bus.$emit('alertMessage','student deleted')
+                }
+            },
             deleteStu(id) {
                 this.deleteLoading = true;
-                this.DeleteStudent(id).then(() => {
+                if (confirm("Press OK to delete student !") == true) {
+                    this.DeleteStudent(id).then(() => {
+                        this.deleteLoading = false;
+                        this.changeRoute()
+                    }).catch((err) => {
+                        this.deleteLoading = false;
+                        console.log(err.response.data)
+                    })
+
+                } else {
+                    this.text = "You canceled!";
                     this.deleteLoading = false;
-                    Bus.$emit('alert', 'student deleted !')
-                      if (this.user.role == 'user') {
-                        router.push('/app/myStudents')
-                    } else if (this.user.role == 'adimn') {
-                        router.push('/app/ManageStudent')
-                    }
-                }).catch((err) => {
-                    this.deleteLoading = false;
-                    console.log(err.response.data)
-                })
+
+                }
+
+
+
+
+
             }
         },
         created() {

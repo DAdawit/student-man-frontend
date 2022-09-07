@@ -18,7 +18,8 @@
         <v-container>
             <v-row>
                 <v-col placeholder="type full name ..." class="d-flex justify-content-center mx-10">
-                    <v-text-field outlined label="search" block prepend-inner-icon="search" v-model="fullname"></v-text-field>
+                    <v-text-field outlined label="search" block prepend-inner-icon="search" v-model="fullname">
+                    </v-text-field>
                 </v-col>
             </v-row>
         </v-container>
@@ -36,7 +37,7 @@
                             <th class="text-left">Email</th>
                             <th class="text-left">Role</th>
                             <th class="text-left">Created_at</th>
-                            <th class="text-left">Actions</th>
+                            <th class="text-left" colspan="2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,7 +58,11 @@
                                     <v-icon right router> visibility </v-icon>
                                 </v-btn>
                             </td>
-
+                           <td>
+                                <v-btn small outlined color="orange" @click="deleteUser(user.id)"> delete
+                                    <v-icon right router> delete </v-icon>
+                                </v-btn>
+                            </td>
                         </tr>
                     </tbody>
                 </template>
@@ -84,7 +89,7 @@
                             <th class="text-left">Email</th>
                             <th class="text-left">Role</th>
                             <th class="text-left">Created_at</th>
-                            <th class="text-left">Actions</th>
+                            <th class="text-left" colspan="2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -105,6 +110,12 @@
                                     <v-icon right router> visibility </v-icon>
                                 </v-btn>
                             </td>
+                            <td>
+                                <v-btn small outlined color="orange" @click="deleteUser(user.id)"> delete
+                                    <v-icon right router> delete </v-icon>
+                                </v-btn>
+                            </td>
+
 
                         </tr>
                     </tbody>
@@ -116,10 +127,14 @@
                 <v-pagination v-model="current_page" :length="last_page" :total-visible="5" circle></v-pagination>
             </div>
         </div>
-
+        <alert-message-vue></alert-message-vue>
     </div>
 </template>
 <script>
+    import {
+        Bus
+    } from '../../main'
+    import alertMessageVue from '../alertMessage.vue'
     import axios from 'axios'
     import addTeacherVue from './addTeacher.vue'
     import {
@@ -128,7 +143,8 @@
     } from 'vuex'
     export default {
         components: {
-            addTeacherVue
+            addTeacherVue,
+            alertMessageVue
         },
         data: () => ({
             loading: false,
@@ -138,7 +154,7 @@
             users: {},
             fullname: '',
             searching: false,
-            searchReasult:{}
+            searchReasult: {}
         }),
         computed: {
             ...mapGetters({
@@ -159,8 +175,17 @@
             editUser(id) {
                 console.log('edit user', id)
             },
-            deleteUser(id) {
-                console.log('delete user', id)
+            async deleteUser(id) {
+                if (confirm("Press OK to delete user !") == true) {
+                    await axios.delete(`/user/${id}`).then(() => {
+                        Bus.$emit('showalert', 'user deleted')
+                        this.searching=false
+                        this.current_page = 1
+                        this.getusers()
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                }
             }
         },
         watch: {
@@ -172,7 +197,6 @@
                 if (newval.length > 3) {
                     this.searching = true;
                     await axios.get(`/searchUser/${newval}`).then((res) => {
-                        console.log(res.data)
                         this.searchReasult = res.data
                     })
                 } else {
@@ -181,8 +205,11 @@
             }
         },
         created() {
-            // this.getUsersList();
             this.getusers();
+            Bus.$on('fetchUsers', (() => {
+                this.current_page = 1;
+                this.getusers()
+            }))
         }
     }
 </script>

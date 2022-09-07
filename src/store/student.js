@@ -1,4 +1,7 @@
+// import router from "@/router";
+// import {Bus} from '../main'
 import axios from "axios"
+// import store from ".";
 
 const state={
     Students:{},
@@ -12,7 +15,7 @@ const getters={
 
 const actions={
     async getStudents({commit}){
-        await axios.get('/students').then((res)=>{
+      return await axios.get('/students?page=1').then((res)=>{
             commit('SET_STUDENTS',res.data)
         })
     },
@@ -21,9 +24,8 @@ const actions={
             commit('SET_STUDENT',res.data)
         })
     },
-    async addStudent({dispatch},data){
-        await axios.post('/students',data).then(()=>{
-            dispatch('getStudents')
+    async addStudent(_,data){
+       return await axios.post('/students',data).then(()=>{
         })
     },
     async updateStudent({dispatch},data){
@@ -32,9 +34,9 @@ const actions={
         })
     },
 
-    async DeleteStudent({dispatch},id){
+    async DeleteStudent(_,id){
         return axios.delete(`/students/${id}`).then(()=>{
-            dispatch('getStudents')
+            // dispatch('getStudents')
         })
     }
 }
