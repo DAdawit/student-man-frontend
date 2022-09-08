@@ -10,93 +10,178 @@
             <v-container>
                 <v-layout row justify-center>
                     <v-card>
-                        <v-card-title>
-                            <span class="headline">Add Student</span>
-                        </v-card-title>
-                        <v-card-text>
-                            <v-container grid-list-md>
-                                <v-layout wrap>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Full Name/ ሙሉ ስም" v-model="student.fullName" required>
-                                        </v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Christian name / የክርስትና ስም" v-model="student.chName"></v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Mother Name / የእናት ስም" v-model="student.motherName" required>
-                                        </v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Phone Number / ስልክ ቁጥር" v-model="student.phoneNumber" required>
-                                        </v-text-field>
-                                    </v-flex>
-                                    <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
-                                        :return-value.sync="student.birthDate" transition="scale-transition" offset-y
-                                        min-width="auto">
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-text-field v-model="student.birthDate" label="birth date /የተወለደበት(ችበት) ቀን"
-                                                prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on">
-                                            </v-text-field>
-                                        </template>
-                                        <v-date-picker v-model="student.birthDate" no-title scrollable>
-                                            <v-spacer></v-spacer>
-                                            <v-btn text color="primary" @click="menu = false"> Cancel </v-btn>
-                                            <v-btn text color="primary" @click="$refs.menu.save(student.birthDate)">
-                                                OK
-                                            </v-btn>
-                                        </v-date-picker>
-                                    </v-menu>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field label="City / አድራሻ ክ/ከተማ" v-model="student.city" required></v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Wereda / ወረዳ" v-model="student.wereda" required></v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Kebele / ቀበሌ" v-model="student.kebele" required></v-text-field>
-                                    </v-flex>
+                        <ValidationObserver v-slot="{ handleSubmit }">
+                            <form @submit.prevent="handleSubmit(save)">
+                                <v-card-title>
+                                    <span class="headline">Add Student</span>
+                                </v-card-title>
+                                <v-card-text>
+                                    <v-container grid-list-md>
+                                        <v-layout wrap>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Full Name"
+                                                    v-slot="{ errors }">
+                                                    <v-text-field label="Full Name/ ሙሉ ስም" v-model="student.fullName"
+                                                        :error="errors.length > 0" :error-messages="errors[0]">
+                                                    </v-text-field>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Christian name"
+                                                    v-slot="{ errors }">
+                                                    <v-text-field label="Christian name / የክርስትና ስም"
+                                                        v-model="student.chName" :error="errors.length > 0"
+                                                        :error-messages="errors[0]"></v-text-field>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Mother Name"
+                                                    v-slot="{ errors }">
+                                                    <v-text-field label="Mother Name / የእናት ስም"
+                                                        v-model="student.motherName" :error="errors.length > 0"
+                                                        :error-messages="errors[0]">
+                                                    </v-text-field>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Phone Number"
+                                                    v-slot="{ errors }">
+                                                    <v-text-field label="Phone Number / ስልክ ቁጥር"
+                                                        v-model="student.phoneNumber" :error="errors.length > 0"
+                                                        :error-messages="errors[0]">
+                                                    </v-text-field>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Birth date"
+                                                    v-slot="{ errors }">
+                                                    <v-menu ref="menu" v-model="menu" :close-on-content-click="false"
+                                                        :return-value.sync="student.birthDate"
+                                                        transition="scale-transition" offset-y min-width="auto">
+                                                        <template v-slot:activator="{ on, attrs }">
+                                                            <v-text-field v-model="student.birthDate"
+                                                                label="Birth date /የተወለደበት(ችበት) ቀን"
+                                                                prepend-icon="mdi-calendar" readonly v-bind="attrs"
+                                                                v-on="on" :error="errors.length > 0"
+                                                                :error-messages="errors[0]">
+                                                            </v-text-field>
+                                                        </template>
+                                                        <v-date-picker v-model="student.birthDate" no-title scrollable>
+                                                            <v-spacer></v-spacer>
+                                                            <v-btn text color="primary" @click="menu = false"> Cancel
+                                                            </v-btn>
+                                                            <v-btn text color="primary"
+                                                                @click="$refs.menu.save(student.birthDate)">
+                                                                OK
+                                                            </v-btn>
+                                                        </v-date-picker>
+                                                    </v-menu>
+                                                </ValidationProvider>
+                                            </v-flex>
 
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field label="House Number / የቤት ቁጥር" v-model="student.houseNumber"></v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-select v-model="student.sex" label="Gender / ጾታ" required
-                                            :items="['Male', 'Female']">
-                                        </v-select>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field label="School Name / የሚማርበት(የምትማርበት) ት/ቤት" v-model="student.schoolName" required>
-                                        </v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-text-field label="Grade / የትምህርት ደረጃ" v-model="student.grade" required></v-text-field>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-select :items="courses.data" v-model="student.course_id" item-text="name"
-                                            item-value="id" label="Course / ኮርስ" persistent-hint single-line></v-select>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4>
-                                        <v-select :items="sections.data" v-model="student.section_id" item-text="name"
-                                            item-value="id" label="Section / ክፍል " persistent-hint single-line></v-select>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4 v-if="user.role == 'user'">
-                                        <v-select :items="usersList.data" v-model="user.id" item-text="name" disabled
-                                            item-value="id" label="Assign Teacher / መምህር" persistent-hint single-line>
-                                        </v-select>
-                                    </v-flex>
-                                    <v-flex xs12 sm6 md4 v-else>
-                                        <v-select :items="usersList.data" v-model="student.user_id" item-text="name"
-                                            item-value="id" label="Assign Teacher / መምህር" persistent-hint single-line>
-                                        </v-select>
-                                    </v-flex>
-                                </v-layout>
-                            </v-container>
-                            <small>*indicates required field</small>
-                        </v-card-text>
-                        <v-card-actions>
-                            <v-btn color="blue darken-1" :loading="loading" @click="save">Save</v-btn>
-                        </v-card-actions>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Address City"
+                                                    v-slot="{ errors }">
+                                                    <v-text-field label="Address City / አድራሻ ክ/ከተማ"
+                                                        v-model="student.city" :error="errors.length > 0"
+                                                        :error-messages="errors[0]">
+                                                    </v-text-field>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Wereda" v-slot="{ errors }">
+                                                    <v-text-field label="Wereda / ወረዳ" v-model="student.wereda"
+                                                        :error="errors.length > 0" :error-messages="errors[0]">
+                                                    </v-text-field>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Kebele" v-slot="{ errors }">
+                                                    <v-text-field label="Kebele / ቀበሌ" v-model="student.kebele"
+                                                        :error="errors.length > 0" :error-messages="errors[0]">
+                                                    </v-text-field>
+                                                </ValidationProvider>
+                                            </v-flex>
+
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="House Number"
+                                                    v-slot="{ errors }">
+                                                    <v-text-field label="House Number / የቤት ቁጥር"
+                                                        v-model="student.houseNumber" :error="errors.length > 0"
+                                                        :error-messages="errors[0]"></v-text-field>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Gender" v-slot="{ errors }">
+                                                    <v-select v-model="student.sex" label="Gender / ጾታ"
+                                                        :items="['Male', 'Female']" :error="errors.length > 0"
+                                                        :error-messages="errors[0]">
+                                                    </v-select>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="School Name" v-slot="{ errors }">
+                                                    <v-text-field label="School Name / የሚማርበት(የምትማርበት) ት/ቤት"
+                                                        v-model="student.schoolName" :error="errors.length > 0"
+                                                        :error-messages="errors[0]">
+                                                    </v-text-field>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Grade" v-slot="{ errors }">
+                                                    <v-text-field label="Grade / የትምህርት ደረጃ" v-model="student.grade"
+                                                        :error="errors.length > 0" :error-messages="errors[0]">
+                                                    </v-text-field>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Course" v-slot="{ errors }">
+
+                                                    <v-select :items="courses.data" v-model="student.course_id"
+                                                        item-text="name" item-value="id" label="Course / ኮርስ"
+                                                        persistent-hint single-line :error="errors.length > 0"
+                                                        :error-messages="errors[0]"></v-select>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4>
+                                                <ValidationProvider rules="required" name="Section" v-slot="{ errors }">
+
+                                                    <v-select :items="sections.data" v-model="student.section_id"
+                                                        item-text="name" item-value="id" label="Section / ክፍል "
+                                                        persistent-hint single-line :error="errors.length > 0"
+                                                        :error-messages="errors[0]"></v-select>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4 v-if="user.role == 'user'">
+                                                <ValidationProvider rules="required" name="Assign Teacher"
+                                                    v-slot="{ errors }">
+                                                    <v-select :items="usersList.data" v-model="user.id"
+                                                        item-text="Assign Teacher" disabled item-value="id"
+                                                        label="Assign Teacher / መምህር" persistent-hint single-line
+                                                        :error="errors.length > 0" :error-messages="errors[0]">
+                                                    </v-select>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                            <v-flex xs12 sm6 md4 v-else>
+                                                <ValidationProvider rules="required" name="Assign Teacher"
+                                                    v-slot="{ errors }">
+
+                                                    <v-select :items="usersList.data" v-model="student.user_id"
+                                                        item-text="name" item-value="id" label="Assign Teacher / መምህር"
+                                                        persistent-hint single-line :error="errors.length > 0"
+                                                        :error-messages="errors[0]">
+                                                    </v-select>
+                                                </ValidationProvider>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-container>
+                                    <small>*indicates required field</small>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn color="blue darken-1" :loading="loading" type="submit">Save</v-btn>
+                                </v-card-actions>
+                            </form>
+                        </ValidationObserver>
                     </v-card>
                 </v-layout>
             </v-container>
@@ -106,7 +191,9 @@
 </template>
 
 <script>
-    import {Bus} from "../../main";
+    import {
+        Bus
+    } from "../../main";
     // import router from "@/router";
     import alertMessageVue from "../alertMessage.vue";
     import {
@@ -126,21 +213,21 @@
                     .toISOString()
                     .substr(0, 10),
                 student: {
-                    fullName: "kasu man  girma ",
-                    chName: "mmmmvmmmv mmm",
-                    motherName: "kasech man",
-                    phoneNumber: "0936207512",
+                    fullName: "",
+                    chName: "",
+                    motherName: "",
+                    phoneNumber: "",
                     birthDate: new Date().toISOString().substr(0, 10),
-                    city: "addis ababa",
-                    wereda: "08",
-                    kebele: "08",
-                    houseNumber: "856",
-                    sex: "Male",
-                    schoolName: "beza",
-                    grade: "8",
-                    user_id: "3",
-                    course_id: "2",
-                    section_id: "2",
+                    city: "",
+                    wereda: "",
+                    kebele: "",
+                    houseNumber: "",
+                    sex: "",
+                    schoolName: "",
+                    grade: "",
+                    user_id: "",
+                    course_id: "",
+                    section_id: "",
                 },
             };
         },
@@ -172,12 +259,12 @@
                         // Bus.$emit("alert",'student added !')
                         // window.confirm('are u sure you went to add');
                         window.alert('student added')
-                        if(this.user.role === 'admin'){
+                        if (this.user.role === 'admin') {
                             this.$router.push("/app/ManageStudent");
-                            Bus.$emit('alert','student added')
-                        }else{
+                            Bus.$emit('alert', 'student added')
+                        } else {
                             this.$router.push("/app/myStudents");
-                            Bus.$emit('alert','student added')
+                            Bus.$emit('alert', 'student added')
                         }
                     }).catch((err) => {
                         console.log(err.response.data);

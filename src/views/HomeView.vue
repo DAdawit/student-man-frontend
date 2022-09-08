@@ -17,8 +17,8 @@
                     @click:append="show1 = !show1" :error="errors.length > 0" :error-messages="errors[0]">
                   </v-text-field>
                 </ValidationProvider>
-                <router-link to="/forgetPassword" class="d-flex justify-end"><small>forget password?</small>
-                </router-link>
+                <!-- <router-link to="/forgetPassword" class="d-flex justify-end"><small>forget password?</small>
+                </router-link> -->
               </v-col>
 
               <small class="red--text" small> {{error}}</small>

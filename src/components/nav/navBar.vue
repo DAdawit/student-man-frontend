@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-app-bar app color="primary" dark flat>
-            <v-app-bar-nav-icon fab class="white mr-10" small text color="black" @click.stop="drawer = !drawer">
+            <v-app-bar-nav-icon v-if="auth" fab class="white mr-10" small text color="black" @click.stop="drawer = !drawer">
             </v-app-bar-nav-icon>
             <div class="d-flex align-center">
                 <v-img alt="Vuetify Logo" class="shrink mr-2" to="/" contain
@@ -22,10 +22,10 @@
                 </v-btn>
             </template>
         </v-app-bar>
-        <v-navigation-drawer app  left permanent v-if="auth !== null">
+        <v-navigation-drawer  app v-model="drawer" left  v-if="auth !== null">
             <navigation-drawer-vue />
 
-            
+
             <template v-slot:append>
                 <div class="pa-2 d-flex justify-content-center">
                     <v-btn block outlined @click="logout()">
@@ -39,13 +39,11 @@
 </template>
 
 <script>
-    // import router from '../../router'
     import navigationDrawerVue from './navigationDrawer.vue'
     import {
         mapGetters,
         mapActions
     } from 'vuex'
-    // import SignUp from '../signUp.vue'
 
     export default {
         data() {
