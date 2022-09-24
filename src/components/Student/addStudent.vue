@@ -156,7 +156,7 @@
                                                 <ValidationProvider rules="required" name="Assign Teacher"
                                                     v-slot="{ errors }">
                                                     <v-select :items="usersList.data" v-model="user.id"
-                                                        item-text="Assign Teacher" disabled item-value="id"
+                                                        item-text="name" disabled item-value="id"
                                                         label="Assign Teacher / መምህር" persistent-hint single-line
                                                         :error="errors.length > 0" :error-messages="errors[0]">
                                                     </v-select>

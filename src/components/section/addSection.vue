@@ -53,6 +53,7 @@
 
 
 <script>
+import axios from 'axios'
     import {
         Bus
     } from '../../main'
@@ -79,12 +80,21 @@
             ...mapActions({
                 addSection: 'section/addSection'
             }),
+            async getSections() {
+                await axios.get(`/sections?page=${this.current_page}`).then((res) => {
+                    this.sections = res.data;
+                    this.current_page = res.data.current_page;
+                    this.last_page = res.data.last_page;
+                })
+            },
 
             save() {
                 this.loading = true
                 this.addSection(this.section).then(() => {
                     Bus.$emit('showalert', 'Section added !')
                     Bus.$emit('fetchSection')
+
+                   this.getSections()
 
                     this.dialog = false
                     this.loading = false

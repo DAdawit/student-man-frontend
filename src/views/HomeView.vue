@@ -17,10 +17,7 @@
                     @click:append="show1 = !show1" :error="errors.length > 0" :error-messages="errors[0]">
                   </v-text-field>
                 </ValidationProvider>
-                <!-- <router-link to="/forgetPassword" class="d-flex justify-end"><small>forget password?</small>
-                </router-link> -->
               </v-col>
-
               <small class="red--text" small> {{error}}</small>
               <v-col cols="10">
                 <v-btn block class="primary mb-10" type="submit" :loading="loading">login</v-btn>
@@ -28,8 +25,6 @@
             </v-row>
           </form>
         </ValidationObserver>
-
-
       </v-card>
     </div>
   </div>
@@ -68,8 +63,10 @@
         this.loginUser(this.user).then((res) => {
           router.push('app/dashboard')
           console.log(res.data)
-        }).catch((err) => {
-          console.log(err)
+        }).catch((err)=>{
+          this.error=err.response.data.message
+            console.log(err.response.data.message);
+            localStorage.removeItem('token')
         })
       }
     }

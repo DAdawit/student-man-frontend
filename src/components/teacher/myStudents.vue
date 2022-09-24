@@ -1,6 +1,12 @@
 <template>
     <div>
-        <h1>my students</h1>
+        <v-card flat>
+            <v-card-title class="text-center justify-start py-6">
+                <h1 class="subheading grey--text mb-5">
+                    my students
+                </h1>
+            </v-card-title>
+        </v-card>
         <v-container>
             <v-row class="pr-10">
                 <v-row>
@@ -34,9 +40,11 @@
                             </h3>
                             <h3 class="caption">House Number:{{studentDetail.houseNumber}}
                             </h3>
+                            <h3 class="caption">Registration-Date
+                                :{{moment(studentDetail.created_at).format('YYYY-MM--DD')}}
+                            </h3>
                             <h3 class="overline text-decoration-underline">School</h3>
                             <h3 class="caption">{{studentDetail.schoolName}} Grade {{studentDetail.grade}}</h3>
-
                             <h3 class="overline text-decoration-underline">Section</h3>
 
                             <template v-if="studentDetail.section != null">
@@ -66,7 +74,7 @@
 
         <v-container>
             <v-row>
-                <v-col  placeholder="type full name ..." class="d-flex justify-content-center mx-10">
+                <v-col placeholder="type full name ..." class="d-flex justify-content-center mx-10">
                     <v-text-field block prepend-inner-icon="search" v-model="fullname"></v-text-field>
                 </v-col>
             </v-row>
@@ -130,7 +138,8 @@
 
 
         <v-container v-if="searching== false">
-        <v-chip color="primary" class="mb-2">{{teacherStudents.students.current_page}} out of {{teacherStudents.students.last_page}} pages</v-chip>
+            <v-chip color="primary" class="mb-2">{{teacherStudents.students.current_page}} out of
+                {{teacherStudents.students.last_page}} pages</v-chip>
 
             <v-simple-table fixed-header class="elevation-1" loading-text="Loading... Please wait">
                 <template v-slot:default>
@@ -202,7 +211,7 @@
                 studentDetail: {},
                 teacherStudents: {},
                 fullname: '',
-                searchReasult:[]
+                searchReasult: []
             }
         },
         computed: {
@@ -243,9 +252,9 @@
                     this.searching = true;
                     await axios.get(`/search/${newval}`).then((res) => {
                         console.log(res.data)
-                        this.searchReasult=res.data
+                        this.searchReasult = res.data
                     })
-                } else{
+                } else {
                     this.searching = false;
                 }
             }

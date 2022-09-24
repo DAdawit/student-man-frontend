@@ -3,14 +3,14 @@
         <v-app-bar app color="primary" dark flat>
             <v-app-bar-nav-icon v-if="auth" fab class="white mr-10" small text color="black" @click.stop="drawer = !drawer">
             </v-app-bar-nav-icon>
-            <div class="d-flex align-center">
+            <!-- <div class="d-flex align-center">
                 <v-img alt="Vuetify Logo" class="shrink mr-2" to="/" contain
                     src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png" transition="scale-transition"
                     width="40" />
 
                 <v-img alt="Vuetify Name" class="shrink mt-1 hidden-sm-and-down" contain min-width="100"
                     src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png" width="100" />
-            </div>
+            </div> -->
 
             <v-spacer></v-spacer>
             <template>

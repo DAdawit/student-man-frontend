@@ -28,9 +28,6 @@ const actions = {
             localStorage.setItem('token', res.data.token)
             axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('token')}`;
             commit('SET_USER', res.data.user)
-        }).catch((err)=>{
-            console.log(err);
-            localStorage.removeItem('token')
         })
     },
 
